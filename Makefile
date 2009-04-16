@@ -1,6 +1,8 @@
 CC := arm-linux-gcc
 CFLAGS := -ggdb -Wall -Wextra
 
+CFLAGS += -DSYSLOG
+
 all:
 
 # dsp-manager
