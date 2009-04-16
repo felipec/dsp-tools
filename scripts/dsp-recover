@@ -1,0 +1,22 @@
+#!/bin/sh
+
+MODULE_USAGE=`cat /proc/modules|grep bridgedriver|head -1|cut -d ' ' -f3`
+COUNT=0
+while [ $MODULE_USAGE -ne 0 ]
+do
+	MODULE_USAGE=`cat /proc/modules|grep bridgedriver|head -1|cut -d ' ' -f3`
+	if [ $COUNT -ge 60 ]; then
+                logger -t "dsp-recover" "gave up waiting for 'bridgedriver' to become free"
+		break
+	fi
+
+        sleep 1
+        COUNT=$(($COUNT + 1))
+done
+
+/etc/init.d/dsp restart
+if [ $? != 0 ]; then
+        logger -t "dsp-recover" "initial restart failed"
+        /lib/dsp/cexec.out /lib/dsp/baseimage.dof
+        /etc/init.d/dsp restart
+fi
