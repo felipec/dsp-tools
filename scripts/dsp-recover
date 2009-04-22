@@ -23,12 +23,13 @@ do
         COUNT=$(($COUNT + 1))
 done
 
-modprobe -r -s -w bridgedriver
+modprobe -r bridgedriver
 if [ $? == 0 ]; then
-        modprobe -s bridgedriver
+        modprobe bridgedriver
 else
         logger -t "dsp-recover" "initial restart failed, reloading image"
-        /lib/dsp/cexec.out -T /lib/dsp/baseimage.dof
+        /lib/dsp/cexec.out -v -T /lib/dsp/baseimage.dof | grep -q failed
+        test $? != 0 # revert the result
 fi
 if [ $? == 0 ]; then
         logger -t "dsp-recover" "DSP restarted"
