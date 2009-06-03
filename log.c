@@ -56,7 +56,7 @@ void pr_helper(unsigned int level,
 
 	vasprintf(&tmp, fmt, args);
 
-	if (level <= 1) {
+	if (level <= 2) {
 #ifdef SYSLOG
 		syslog(log_level_to_syslog(level), "%s", tmp);
 #else
