@@ -22,8 +22,7 @@
 #ifndef LOG_H
 #define LOG_H
 
-extern int debug_level;
-extern const char *debug_id;
+/* #define DEBUG */
 
 void pr_helper(unsigned int level,
 	       const char *file,
@@ -37,6 +36,11 @@ void pr_helper(unsigned int level,
 #define pr_err(...) pr_base(0, __VA_ARGS__)
 #define pr_warning(...) pr_base(1, __VA_ARGS__)
 #define pr_info(...) pr_base(2, __VA_ARGS__)
+
+#ifdef DEBUG
 #define pr_debug(...) pr_base(3, __VA_ARGS__)
+#else
+#define pr_debug(...)
+#endif
 
 #endif /* LOG_H */

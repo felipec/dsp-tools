@@ -1,7 +1,7 @@
 CC := arm-linux-gcc
-CFLAGS := -ggdb -Wall -Wextra
+CFLAGS := -ggdb -Wall -Wextra -Wno-unused-parameter
 
-CFLAGS += -DSYSLOG
+override CFLAGS += -D_GNU_SOURCE
 
 all:
 

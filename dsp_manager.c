@@ -85,9 +85,6 @@ int main(void)
 	struct dsp_notification *n_objects[2];
 	int ret = -1;
 
-	debug_level = 2;
-	debug_id = process;
-
 	signal(SIGUSR1, signal_handler);
 
 #ifdef SYSLOG
