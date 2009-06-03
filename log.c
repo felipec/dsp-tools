@@ -36,11 +36,11 @@ const char *debug_id = "log";
 static inline const char *
 log_level_to_string(unsigned int level)
 {
-	switch (level)
-	{
+	switch (level) {
 		case 0: return "error"; break;
 		case 1: return "warning"; break;
 		case 2: return "info"; break;
+		case 3: return "debug"; break;
 		default: return NULL; break;
 	}
 }
