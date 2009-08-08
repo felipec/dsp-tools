@@ -25,6 +25,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define BRIDGE_DEV "/dev/DspBridge"
+
 #define DSP_SUCCEEDED(x) ((int)(x) >= 0)
 #define DSP_FAILED(x) ((int)(x) < 0)
 

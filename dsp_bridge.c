@@ -32,7 +32,7 @@
 
 int dsp_open(void)
 {
-	return open("/dev/DspBridge", O_RDWR);
+	return open(BRIDGE_DEV, O_RDWR);
 }
 
 int dsp_close(int handle)
