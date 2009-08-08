@@ -80,8 +80,8 @@ bool attach(void)
 
 int main(void)
 {
-	struct dsp_notification *n_mmufault;
-	struct dsp_notification *n_syserror;
+	struct dsp_notification *n_mmufault = NULL;
+	struct dsp_notification *n_syserror = NULL;
 	struct dsp_notification *n_objects[2];
 	int ret = -1;
 
