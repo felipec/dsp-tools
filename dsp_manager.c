@@ -159,7 +159,8 @@ int main(void)
 leave:
 	free(n_mmufault);
 	free(n_syserror);
-
+	if (proc)
+		dsp_detach(dsp_handle, proc);
 	if (dsp_handle > 0)
 		dsp_close(dsp_handle);
 
