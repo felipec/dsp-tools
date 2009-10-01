@@ -45,20 +45,55 @@ node_type_to_str(enum dsp_node_type type)
 	}
 }
 
+static inline const char *
+node_status_to_str(enum dsp_node_state state)
+{
+	switch (state) {
+		case NODE_ALLOCATED:
+			return "allocated";
+		case NODE_CREATED:
+			return "created";
+		case NODE_RUNNING:
+			return "running";
+		case NODE_PAUSED:
+			return "paused";
+		case NODE_DONE:
+			return "done";
+		default:
+			return NULL;
+	}
+}
+
 struct node_info {
 	dsp_uuid_t id;
 	enum dsp_node_type type;
 	char name[32];
+	enum dsp_node_state state;
 };
+
+static inline bool uuidcmp(dsp_uuid_t *u1, dsp_uuid_t *u2)
+{
+	if (memcmp(u1, u2, sizeof(dsp_uuid_t)) == 0)
+		return true;
+	return false;
+}
 
 static bool do_list(void)
 {
 	struct dsp_ndb_props props;
 	unsigned num = 0, i;
+	void **tmp_table;
+	void *proc_handle;
+	unsigned node_count = 0, allocated_count = 0;
 	struct node_info *node_table;
 
 	if (!dsp_enum(dsp_handle, 0, &props, sizeof(props), &num)) {
 		pr_err("failed to enumerate nodes");
+		return false;
+	}
+
+	if (!dsp_attach(dsp_handle, 0, NULL, &proc_handle)) {
+		pr_err("dsp attach failed");
 		return false;
 	}
 
@@ -68,16 +103,50 @@ static bool do_list(void)
 			memcpy(&node_table[i].id, &props.uiNodeID, sizeof(props.uiNodeID));
 			memcpy(&node_table[i].name, props.acName, sizeof(props.acName));
 			node_table[i].type = props.uNodeType;
+			node_table[i].state = -1;
+		}
+	}
+
+	tmp_table = calloc(num, sizeof(*tmp_table));
+	if (!dsp_enum_nodes(dsp_handle, proc_handle, tmp_table, num,
+			    &node_count, &allocated_count)) {
+		pr_err("failed to enumerate nodes");
+		goto leave;
+	}
+
+	for (i = 0; i < node_count; i++) {
+		struct dsp_node_attr attr;
+		dsp_node_t node = { .handle = tmp_table[i] };
+		if (dsp_node_get_attr(dsp_handle, &node, &attr, sizeof(attr))) {
+			unsigned j;
+			for (j = 0; j < num; j++) {
+				if (uuidcmp(&node_table[j].id, &attr.info.props.uiNodeID)) {
+					node_table[j].state = attr.info.state;
+					break;
+				}
+			}
 		}
 	}
 
 	for (i = 0; i < num; i++) {
-		printf("%s: %s\n",
-		       node_type_to_str(node_table[i].type),
-		       node_table[i].name);
+		const char *state = node_status_to_str(node_table[i].state);
+		if (state)
+			printf("%s: %s (%s)\n",
+			       node_type_to_str(node_table[i].type),
+			       node_table[i].name,
+			       state);
+		else
+			printf("%s: %s\n",
+			       node_type_to_str(node_table[i].type),
+			       node_table[i].name);
 	}
 
+	if (!dsp_detach(dsp_handle, proc_handle))
+		pr_err("dsp detach failed");
+
+leave:
 	free(node_table);
+	free(tmp_table);
 
 	return true;
 }
