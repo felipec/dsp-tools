@@ -17,6 +17,10 @@ dsp-load: dsp_load.o dsp_bridge.o
 
 bins += dsp-load
 
+dsp-probe: dsp_probe.o dsp_bridge.o log.o
+
+bins += dsp-probe
+
 all: $(bins)
 
 # pretty print
@@ -43,3 +47,4 @@ install: $(bins)
 	install -m 755 scripts/dsp-recover $(DESTDIR)/usr/libexec
 	mkdir -p $(DESTDIR)/usr/bin
 	install -m 755 dsp-load $(DESTDIR)/usr/bin
+	install -m 755 dsp-probe $(DESTDIR)/usr/bin

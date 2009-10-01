@@ -1,3 +1,4 @@
 *.o
 dsp-manager
 dsp-load
+dsp-probe
