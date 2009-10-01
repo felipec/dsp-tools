@@ -13,6 +13,10 @@ dsp-manager: dsp_manager.o dsp_bridge.o log.o
 
 bins += dsp-manager
 
+dsp-load: dsp_load.o dsp_bridge.o
+
+bins += dsp-load
+
 all: $(bins)
 
 # pretty print
@@ -37,3 +41,5 @@ install: $(bins)
 	install -m 755 dsp-manager $(DESTDIR)/usr/sbin
 	mkdir -p $(DESTDIR)/usr/libexec
 	install -m 755 scripts/dsp-recover $(DESTDIR)/usr/libexec
+	mkdir -p $(DESTDIR)/usr/bin
+	install -m 755 dsp-load $(DESTDIR)/usr/bin

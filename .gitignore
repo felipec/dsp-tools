@@ -1,2 +1,3 @@
 *.o
 dsp-manager
+dsp-load
