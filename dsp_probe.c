@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "dsp_bridge.h"
 #include "log.h"
@@ -44,23 +45,39 @@ node_type_to_str(enum dsp_node_type type)
 	}
 }
 
+struct node_info {
+	dsp_uuid_t id;
+	enum dsp_node_type type;
+	char name[32];
+};
+
 static bool do_list(void)
 {
 	struct dsp_ndb_props props;
-	unsigned int num = 0, i;
+	unsigned num = 0, i;
+	struct node_info *node_table;
 
 	if (!dsp_enum(dsp_handle, 0, &props, sizeof(props), &num)) {
 		pr_err("failed to enumerate nodes");
 		return false;
 	}
 
+	node_table = calloc(num, sizeof(*node_table));
 	for (i = 0; i < num; i++) {
 		if (dsp_enum(dsp_handle, i, &props, sizeof(props), &num)) {
-			printf("%s: %s\n",
-			       node_type_to_str(props.uNodeType),
-			       props.acName);
+			memcpy(&node_table[i].id, &props.uiNodeID, sizeof(props.uiNodeID));
+			memcpy(&node_table[i].name, props.acName, sizeof(props.acName));
+			node_table[i].type = props.uNodeType;
 		}
 	}
+
+	for (i = 0; i < num; i++) {
+		printf("%s: %s\n",
+		       node_type_to_str(node_table[i].type),
+		       node_table[i].name);
+	}
+
+	free(node_table);
 
 	return true;
 }
