@@ -29,7 +29,6 @@ Q = $(V:y=)
 QUIET_CC    = $(Q:@=@echo '   CC         '$@;)
 QUIET_LINK  = $(Q:@=@echo '   LINK       '$@;)
 QUIET_CLEAN = $(Q:@=@echo '   CLEAN      '$@;)
-QUIET_DLL   = $(Q:@=@echo '   DLLCREATE  '$@;)
 
 %.o:: %.c
 	$(QUIET_CC)$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
@@ -38,7 +37,7 @@ $(bins):
 	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 clean:
-	$(RM) $(bins) *.o
+	$(QUIET_CLEAN)$(RM) $(bins) *.o
 
 install: $(bins)
 	mkdir -p $(DESTDIR)/usr/sbin
