@@ -21,6 +21,10 @@ dsp-probe: dsp_probe.o dsp_bridge.o log.o
 
 bins += dsp-probe
 
+dsp-ping: dsp_ping.o dsp_bridge.o log.o
+
+bins += dsp-ping
+
 all: $(bins)
 
 # pretty print
@@ -47,3 +51,4 @@ install: $(bins)
 	mkdir -p $(DESTDIR)/usr/bin
 	install -m 755 dsp-load $(DESTDIR)/usr/bin
 	install -m 755 dsp-probe $(DESTDIR)/usr/bin
+	install -m 755 dsp-ping $(DESTDIR)/usr/bin
