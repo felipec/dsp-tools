@@ -38,7 +38,7 @@ create_node(void)
 	dsp_node_t *node = NULL;
 
 	const dsp_uuid_t uuid = { 0x12a3c3c1, 0xd015, 0x11d4, 0x9f, 0x69,
-				  { 0x00, 0xc0, 0x4f, 0x3a, 0x59, 0xae } };
+		{ 0x00, 0xc0, 0x4f, 0x3a, 0x59, 0xae } };
 
 	if (!dsp_register(dsp_handle, &uuid, DSP_DCD_LIBRARYTYPE,
 			  SNDIR "/pingdyn_3430.dll64P"))
@@ -60,7 +60,6 @@ create_node(void)
 	}
 
 	return node;
-
 }
 
 static inline bool
@@ -97,16 +96,16 @@ run_task(dsp_node_t *node)
 	notifications = &event;
 
 	for (n = 0; n < count; n++) {
-                if (!dsp_send_message(dsp_handle, node, 1, 0, 0)) {
-                        pr_err("dsp node put message failed");
-                        continue;
-                }
+		if (!dsp_send_message(dsp_handle, node, 1, 0, 0)) {
+			pr_err("dsp node put message failed");
+			continue;
+		}
 
 		if (!dsp_wait_for_events(dsp_handle, &notifications,
 					 1, &index, -1)
 		    && index == 0) {
 			pr_err("dsp wait for events failed");
-                        break;
+			break;
 		}
 
 		dsp_msg_t msg;
@@ -124,7 +123,7 @@ run_task(dsp_node_t *node)
 }
 
 int
-main (int argc, char **argv)
+main(int argc, char **argv)
 {
 	dsp_node_t *node;
 	int ret = 0;
