@@ -32,11 +32,11 @@ bins += dsp-ping
 all: $(bins)
 
 # pretty print
-V = @
-Q = $(V:y=)
-QUIET_CC    = $(Q:@=@echo '   CC         '$@;)
-QUIET_LINK  = $(Q:@=@echo '   LINK       '$@;)
-QUIET_CLEAN = $(Q:@=@echo '   CLEAN      '$@;)
+ifndef V
+QUIET_CC    = @echo '   CC         '$@;
+QUIET_LINK  = @echo '   LINK       '$@;
+QUIET_CLEAN = @echo '   CLEAN      '$@;
+endif
 
 %.o:: %.c
 	$(QUIET_CC)$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
