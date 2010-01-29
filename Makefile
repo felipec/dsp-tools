@@ -14,22 +14,20 @@ all:
 # dsp-manager
 
 dsp-manager: dsp_manager.o dsp_bridge.o log.o
-
 bins += dsp-manager
 
 dsp-load: dsp_load.o dsp_bridge.o
-
 bins += dsp-load
 
 dsp-probe: dsp_probe.o dsp_bridge.o log.o
-
 bins += dsp-probe
 
 dsp-ping: dsp_ping.o dsp_bridge.o log.o
-
 bins += dsp-ping
 
 all: $(bins)
+
+D = $(DESTDIR)
 
 # pretty print
 ifndef V
@@ -48,11 +46,11 @@ clean:
 	$(QUIET_CLEAN)$(RM) $(bins) *.o
 
 install: $(bins)
-	mkdir -p $(DESTDIR)/usr/sbin
-	install -m 755 dsp-manager $(DESTDIR)/usr/sbin
-	mkdir -p $(DESTDIR)/usr/libexec
-	install -m 755 scripts/dsp-recover $(DESTDIR)/usr/libexec
-	mkdir -p $(DESTDIR)/usr/bin
-	install -m 755 dsp-load $(DESTDIR)/usr/bin
-	install -m 755 dsp-probe $(DESTDIR)/usr/bin
-	install -m 755 dsp-ping $(DESTDIR)/usr/bin
+	mkdir -p $(D)/usr/sbin
+	install -m 755 dsp-manager $(D)/usr/sbin
+	mkdir -p $(D)/usr/libexec
+	install -m 755 scripts/dsp-recover $(D)/usr/libexec
+	mkdir -p $(D)/usr/bin
+	install -m 755 dsp-load $(D)/usr/bin
+	install -m 755 dsp-probe $(D)/usr/bin
+	install -m 755 dsp-ping $(D)/usr/bin
