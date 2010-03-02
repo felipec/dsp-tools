@@ -46,11 +46,8 @@ clean:
 	$(QUIET_CLEAN)$(RM) $(bins) *.o
 
 install: $(bins)
-	mkdir -p $(D)/usr/sbin
-	install -m 755 dsp-manager $(D)/usr/sbin
-	mkdir -p $(D)/usr/libexec
-	install -m 755 scripts/dsp-recover $(D)/usr/libexec
-	mkdir -p $(D)/usr/bin
-	install -m 755 dsp-load $(D)/usr/bin
-	install -m 755 dsp-probe $(D)/usr/bin
-	install -m 755 dsp-ping $(D)/usr/bin
+	install -m 755 dsp-manager -D $(D)/usr/sbin/dsp-manager
+	install -m 755 scripts/dsp-recover -D $(D)/usr/libexec/dsp-recover
+	install -m 755 dsp-load -D $(D)/usr/bin/dsp-load
+	install -m 755 dsp-probe -D $(D)/usr/bin/dsp-probe
+	install -m 755 dsp-ping -D $(D)/usr/bin/dsp-ping
