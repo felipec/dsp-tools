@@ -5,6 +5,10 @@ CFLAGS := -O2 -Wall -Wextra -Wno-unused-parameter
 
 override CFLAGS += -D_GNU_SOURCE
 
+ifdef NEW
+  override CFLAGS += -DNEW_API
+endif
+
 all:
 
 # dsp-manager
