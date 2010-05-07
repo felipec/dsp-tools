@@ -9,6 +9,8 @@ ifdef NEW
   override CFLAGS += -DNEW_API
 endif
 
+version := $(shell ./get-version)
+
 all:
 
 # dsp-manager
