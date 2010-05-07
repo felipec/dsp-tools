@@ -53,3 +53,13 @@ install: $(bins)
 	install -m 755 dsp-load -D $(D)/usr/bin/dsp-load
 	install -m 755 dsp-probe -D $(D)/usr/bin/dsp-probe
 	install -m 755 dsp-ping -D $(D)/usr/bin/dsp-ping
+
+dist: base := dsp-tools-$(version)
+dist:
+	git archive --format=tar --prefix=$(base)/ HEAD > /tmp/$(base).tar
+	mkdir -p $(base)
+	echo $(version) > $(base)/.version
+	chmod 664 $(base)/.version
+	tar --append -f /tmp/$(base).tar --owner root --group root $(base)/.version
+	rm -r $(base)
+	gzip /tmp/$(base).tar
