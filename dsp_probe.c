@@ -32,16 +32,16 @@ static inline const char *
 node_type_to_str(enum dsp_node_type type)
 {
 	switch (type) {
-		case DSP_NODE_DEVICE:
-			return "device";
-		case DSP_NODE_MESSAGE:
-			return "message";
-		case DSP_NODE_TASK:
-			return "task";
-		case DSP_NODE_DAISSOCKET:
-			return "dais socket";
-		default:
-			return NULL;
+	case DSP_NODE_DEVICE:
+		return "device";
+	case DSP_NODE_MESSAGE:
+		return "message";
+	case DSP_NODE_TASK:
+		return "task";
+	case DSP_NODE_DAISSOCKET:
+		return "dais socket";
+	default:
+		return NULL;
 	}
 }
 
@@ -49,18 +49,18 @@ static inline const char *
 node_status_to_str(enum dsp_node_state state)
 {
 	switch (state) {
-		case NODE_ALLOCATED:
-			return "allocated";
-		case NODE_CREATED:
-			return "created";
-		case NODE_RUNNING:
-			return "running";
-		case NODE_PAUSED:
-			return "paused";
-		case NODE_DONE:
-			return "done";
-		default:
-			return NULL;
+	case NODE_ALLOCATED:
+		return "allocated";
+	case NODE_CREATED:
+		return "created";
+	case NODE_RUNNING:
+		return "running";
+	case NODE_PAUSED:
+		return "paused";
+	case NODE_DONE:
+		return "done";
+	default:
+		return NULL;
 	}
 }
 

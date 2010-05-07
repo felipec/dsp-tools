@@ -109,12 +109,12 @@ run_task(dsp_node_t *node)
 		}
 
 		dsp_msg_t msg;
-		if (dsp_node_get_message (dsp_handle, node, &msg, 0))
-			printf("Ping: Id %d Msg %d Mem %d\n",
+		if (dsp_node_get_message(dsp_handle, node, &msg, 0))
+			printf("ping: id=%d, msg=%d, mem=%d\n",
 			       msg.cmd, msg.arg_1, msg.arg_2);
 	}
 
-	if (!dsp_node_terminate (dsp_handle, node, &exit_status)) {
+	if (!dsp_node_terminate(dsp_handle, node, &exit_status)) {
 		pr_err("dsp node terminate failed: %lx", exit_status);
 		return false;
 	}

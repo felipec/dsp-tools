@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 Nokia Corporation.
- * Copyright (C) 2009 Texas Instruments, Incorporated 
+ * Copyright (C) 2009 Texas Instruments, Incorporated
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,8 @@ void reset_dsp(void)
 		pr_err("couldn't recover");
 }
 
-void signal_handler(int n) {
+void signal_handler(int n)
+{
 	pr_info("signal %d received", n);
 	reset_dsp();
 }

@@ -34,10 +34,10 @@ static inline int
 log_level_to_syslog(unsigned int level)
 {
 	switch (level) {
-		case 0: return LOG_ERR;
-		case 1: return LOG_WARNING;
-		case 2: return LOG_INFO;
-		default: return LOG_DEBUG;
+	case 0: return LOG_ERR;
+	case 1: return LOG_WARNING;
+	case 2: return LOG_INFO;
+	default: return LOG_DEBUG;
 	}
 }
 #endif
