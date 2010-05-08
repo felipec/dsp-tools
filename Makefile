@@ -1,7 +1,7 @@
 CROSS_COMPILE ?= arm-linux-
 CC := $(CROSS_COMPILE)gcc
 
-CFLAGS := -O2 -Wall -Wextra -Wno-unused-parameter
+CFLAGS := -O2 -Wall -Wextra -Wno-unused-parameter -std=c99
 
 override CFLAGS += -D_GNU_SOURCE
 
@@ -16,8 +16,6 @@ endif
 version := $(shell ./get-version)
 
 all:
-
-# dsp-manager
 
 dsp-manager: dsp_manager.o dsp_bridge.o log.o
 bins += dsp-manager
