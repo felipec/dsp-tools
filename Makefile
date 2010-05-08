@@ -9,6 +9,10 @@ ifdef NEW
   override CFLAGS += -DNEW_API
 endif
 
+ifdef DEBUG
+  override CFLAGS += -DDEBUG
+endif
+
 version := $(shell ./get-version)
 
 all:

@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2009 Felipe Contreras
+ * Copyright (C) 2009-2010 Felipe Contreras
+ * Copyright (C) 2009-2010 Nokia Corporation
  *
  * Author: Felipe Contreras <felipe.contreras@gmail.com>
  *
@@ -29,6 +30,10 @@
 #include <syslog.h>
 #endif
 
+#ifdef DEBUG
+unsigned debug_level = 1;
+#endif
+
 #ifdef SYSLOG
 static inline int
 log_level_to_syslog(unsigned int level)
@@ -42,6 +47,18 @@ log_level_to_syslog(unsigned int level)
 }
 #endif
 
+static inline const char *
+log_level_to_string(unsigned int level)
+{
+	switch (level) {
+	case 0: return "error"; break;
+	case 1: return "warning"; break;
+	case 2: return "info"; break;
+	case 3: return "debug"; break;
+	default: return NULL; break;
+	}
+}
+
 void pr_helper(unsigned int level,
 	       const char *file,
 	       const char *function,
@@ -52,17 +69,30 @@ void pr_helper(unsigned int level,
 	char *tmp;
 	va_list args;
 
+#ifdef DEBUG
+	if (level > debug_level)
+		return;
+#endif
+
 	va_start(args, fmt);
 
 	vasprintf(&tmp, fmt, args);
 
-	if (level <= 2) {
+	if (level <= 1) {
 #ifdef SYSLOG
 		syslog(log_level_to_syslog(level), "%s", tmp);
-#else
-		printf("%s: %s\n", function, tmp);
 #endif
+		fprintf(stderr, "%s: %s: %s\n",
+			log_level_to_string(level), function, tmp);
 	}
+#ifdef DEBUG
+	else if (level == 2)
+		fprintf(stderr, "%s: %s: %s\n",
+			log_level_to_string(level), function, tmp);
+	else if (level == 3)
+		fprintf(stderr, "%s: %s:%s(%u): %s\n",
+			log_level_to_string(level), file, function, line, tmp);
+#endif
 
 	free(tmp);
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2009 Felipe Contreras
+ * Copyright (C) 2009-2010 Felipe Contreras
+ * Copyright (C) 2009-2010 Nokia Corporation
  *
  * Author: Felipe Contreras <felipe.contreras@gmail.com>
  *
@@ -22,7 +23,9 @@
 #ifndef LOG_H
 #define LOG_H
 
-/* #define DEBUG */
+#ifdef DEBUG
+extern int debug_level;
+#endif
 
 void pr_helper(unsigned int level,
 	       const char *file,
@@ -35,12 +38,13 @@ void pr_helper(unsigned int level,
 
 #define pr_err(...) pr_base(0, __VA_ARGS__)
 #define pr_warning(...) pr_base(1, __VA_ARGS__)
-#define pr_info(...) pr_base(2, __VA_ARGS__)
 
 #ifdef DEBUG
+#define pr_info(...) pr_base(2, __VA_ARGS__)
 #define pr_debug(...) pr_base(3, __VA_ARGS__)
 #else
-#define pr_debug(...)
+#define pr_info(...) ({ if (0) pr_base(2, __VA_ARGS__); })
+#define pr_debug(...) ({ if (0) pr_base(3, __VA_ARGS__); })
 #endif
 
 #endif /* LOG_H */
