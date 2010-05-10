@@ -55,6 +55,7 @@ install: $(bins)
 	install -m 755 dsp-probe -D $(D)/usr/bin/dsp-probe
 	install -m 755 dsp-test -D $(D)/usr/bin/dsp-test
 	install -m 755 dsp-exec -D $(D)/usr/bin/dsp-exec
+	install -m 644 firmware/test.dll64P -D $(D)/lib/dsp/test.dll64P
 
 dist: base := dsp-tools-$(version)
 dist:
