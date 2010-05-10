@@ -161,23 +161,11 @@ check_events(dsp_node_t *node,
 	}
 }
 
-static bool
-run_task(dsp_node_t *node,
-	 unsigned long times)
+void run_dmm(dsp_node_t *node,
+	     unsigned long times)
 {
-	unsigned long exit_status;
-
 	dmm_buffer_t *input_buffer;
 	dmm_buffer_t *output_buffer;
-
-	if (!dsp_node_run(dsp_handle, node)) {
-		pr_err("dsp node run failed");
-		return false;
-	}
-
-	register_msgs(node);
-
-	pr_info("dsp node running");
 
 	input_buffer = dmm_buffer_new(dsp_handle, proc);
 	output_buffer = dmm_buffer_new(dsp_handle, proc);
@@ -220,6 +208,24 @@ run_task(dsp_node_t *node,
 
 	dmm_buffer_free(output_buffer);
 	dmm_buffer_free(input_buffer);
+}
+
+static bool
+run_task(dsp_node_t *node,
+	 unsigned long times)
+{
+	unsigned long exit_status;
+
+	if (!dsp_node_run(dsp_handle, node)) {
+		pr_err("dsp node run failed");
+		return false;
+	}
+
+	register_msgs(node);
+
+	pr_info("dsp node running");
+
+	run_dmm(node, times);
 
 	if (!dsp_node_terminate(dsp_handle, node, &exit_status)) {
 		pr_err("dsp node terminate failed: %lx", exit_status);
