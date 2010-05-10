@@ -82,10 +82,10 @@ static bool do_list(void)
 {
 	struct dsp_ndb_props props;
 	unsigned num = 0, i;
-	void **tmp_table;
 	void *proc_handle;
-	unsigned node_count = 0, allocated_count = 0;
 	struct node_info *node_table;
+	void **tmp_table;
+	unsigned node_count = 0, allocated_count = 0;
 
 	if (!dsp_enum(dsp_handle, 0, &props, sizeof(props), &num)) {
 		pr_err("failed to enumerate nodes");
@@ -108,24 +108,24 @@ static bool do_list(void)
 	}
 
 	tmp_table = calloc(num, sizeof(*tmp_table));
-	if (!dsp_enum_nodes(dsp_handle, proc_handle, tmp_table, num,
-			    &node_count, &allocated_count)) {
-		pr_err("failed to enumerate nodes");
-		goto leave;
-	}
-
-	for (i = 0; i < node_count; i++) {
-		struct dsp_node_attr attr;
-		dsp_node_t node = { .handle = tmp_table[i] };
-		if (dsp_node_get_attr(dsp_handle, &node, &attr, sizeof(attr))) {
-			unsigned j;
-			for (j = 0; j < num; j++) {
-				if (uuidcmp(&node_table[j].id, &attr.info.props.uiNodeID)) {
-					node_table[j].state = attr.info.state;
-					break;
+	if (dsp_enum_nodes(dsp_handle, proc_handle, tmp_table, num,
+			   &node_count, &allocated_count))
+	{
+		for (i = 0; i < node_count; i++) {
+			struct dsp_node_attr attr;
+			dsp_node_t node = { .handle = tmp_table[i] };
+			if (dsp_node_get_attr(dsp_handle, &node, &attr, sizeof(attr))) {
+				unsigned j;
+				for (j = 0; j < num; j++) {
+					if (uuidcmp(&node_table[j].id, &attr.info.props.uiNodeID)) {
+						node_table[j].state = attr.info.state;
+						break;
+					}
 				}
 			}
 		}
+	} else {
+		pr_err("failed to list active nodes");
 	}
 
 	for (i = 0; i < num; i++) {
@@ -144,9 +144,8 @@ static bool do_list(void)
 	if (!dsp_detach(dsp_handle, proc_handle))
 		pr_err("dsp detach failed");
 
-leave:
-	free(node_table);
 	free(tmp_table);
+	free(node_table);
 
 	return true;
 }
