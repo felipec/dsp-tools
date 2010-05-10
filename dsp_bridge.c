@@ -115,6 +115,7 @@
 #define PROC_INVALIDATEMEMORY	_IOW(DB, DB_IOC(DB_PROC, 16), unsigned long)
 #define PROC_GET_STATE		_IOWR(DB, DB_IOC(DB_PROC, 5), unsigned long)
 #define PROC_ENUMRESOURCES	_IOWR(DB, DB_IOC(DB_PROC, 4), unsigned long)
+#define PROC_ENUMNODE		_IOWR(DB, DB_IOC(DB_PROC, 3), unsigned long)
 
 /* NODE Module */
 #define NODE_REGISTERNOTIFY	_IOWR(DB, DB_IOC(DB_NODE, 11), unsigned long)
@@ -825,7 +826,7 @@ bool dsp_proc_get_info(int handle,
 		.size = size,
 	};
 
-	return DSP_SUCCEEDED(ioctl(handle, PROC_GET_STATE, &arg));
+	return DSP_SUCCEEDED(ioctl(handle, PROC_ENUMRESOURCES, &arg));
 }
 
 struct enum_nodes {
@@ -851,5 +852,5 @@ bool dsp_enum_nodes(int handle,
 		.allocated = allocated,
 	};
 
-	return DSP_SUCCEEDED(ioctl(handle, PROC_ENUMRESOURCES, &arg));
+	return DSP_SUCCEEDED(ioctl(handle, PROC_ENUMNODE, &arg));
 }
