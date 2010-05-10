@@ -44,13 +44,13 @@ QUIET_CLEAN = @echo '   CLEAN      '$@;
 endif
 
 %.o:: %.c
-	$(QUIET_CC)$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
+	$(QUIET_CC)$(CC) $(CFLAGS) $(INCLUDES) -MMD -o $@ -c $<
 
 $(bins):
 	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 clean:
-	$(QUIET_CLEAN)$(RM) $(bins) *.o
+	$(QUIET_CLEAN)$(RM) $(bins) *.o *.d
 
 install: $(bins)
 	install -m 755 dsp-manager -D $(D)/usr/sbin/dsp-manager
@@ -69,3 +69,5 @@ dist:
 	tar --append -f /tmp/$(base).tar --owner root --group root $(base)/.version
 	rm -r $(base)
 	gzip /tmp/$(base).tar
+
+-include *.d
