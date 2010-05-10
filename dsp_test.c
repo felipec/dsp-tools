@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2008-2009 Nokia Corporation.
+ * Copyright (C) 2009-2010 Felipe Contreras
+ * Copyright (C) 2009-2010 Nokia Corporation
  * Copyright (C) 2009 Igalia S.L
  *
  * Author: Felipe Contreras <felipe.contreras@nokia.com>
