@@ -27,7 +27,7 @@
 
 #include "dsp_bridge.h"
 
-unsigned delay = 500; /* in ms */
+static unsigned delay = 500; /* in ms */
 
 static void
 display(void)
