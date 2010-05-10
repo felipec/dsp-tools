@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008-2009 Nokia Corporation.
+ * Copyright (C) 2009 Igalia S.L
  *
  * Author: Felipe Contreras <felipe.contreras@nokia.com>
  *
@@ -23,6 +24,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <signal.h>
+#include <stdio.h>
 
 #include "dmm_buffer.h"
 #include "dsp_bridge.h"
@@ -33,6 +35,7 @@ static unsigned long output_buffer_size = 0x1000;
 static bool done;
 static int ntimes;
 static bool do_fault;
+static bool do_ping;
 
 static int dsp_handle;
 static void *proc;
@@ -210,6 +213,30 @@ void run_dmm(dsp_node_t *node,
 	dmm_buffer_free(input_buffer);
 }
 
+void run_ping(dsp_node_t *node,
+	      unsigned long times)
+{
+	while (!done) {
+		dsp_msg_t msg;
+
+		if (!dsp_send_message(dsp_handle, node, 2, 0, 0)) {
+			pr_err("dsp node put message failed");
+			continue;
+		}
+
+		if (!check_events(node, &msg)) {
+			done = true;
+			break;
+		}
+
+		printf("ping: id=%d, msg=%d, mem=%d\n",
+		       msg.cmd, msg.arg_1, msg.arg_2);
+
+		if (--times == 0)
+			break;
+	}
+}
+
 static bool
 run_task(dsp_node_t *node,
 	 unsigned long times)
@@ -225,7 +252,10 @@ run_task(dsp_node_t *node,
 
 	pr_info("dsp node running");
 
-	run_dmm(node, times);
+	if (do_ping)
+		run_ping(node, times);
+	else
+		run_dmm(node, times);
 
 	if (!dsp_node_terminate(dsp_handle, node, &exit_status)) {
 		pr_err("dsp node terminate failed: %lx", exit_status);
@@ -263,6 +293,9 @@ handle_options(int *argc,
 
 		if (!strcmp(cmd, "-f") || !strcmp(cmd, "--fault"))
 			do_fault = 1;
+
+		if (!strcmp(cmd, "-p") || !strcmp(cmd, "--ping"))
+			do_ping = 1;
 
 		(*argv)++;
 		(*argc)--;
