@@ -216,12 +216,12 @@ run_task(dsp_node_t *node,
 {
 	unsigned long exit_status;
 
+	register_msgs(node);
+
 	if (!dsp_node_run(dsp_handle, node)) {
 		pr_err("dsp node run failed");
 		return false;
 	}
-
-	register_msgs(node);
 
 	pr_info("dsp node running");
 
