@@ -23,9 +23,6 @@ bins += dsp-load
 dsp-probe: dsp_probe.o dsp_bridge.o log.o
 bins += dsp-probe
 
-dsp-ping: dsp_ping.o dsp_bridge.o log.o
-bins += dsp-ping
-
 dsp-test: dsp_test.o dsp_bridge.o log.o
 bins += dsp-test
 
@@ -52,7 +49,6 @@ clean:
 install: $(bins)
 	install -m 755 dsp-load -D $(D)/usr/bin/dsp-load
 	install -m 755 dsp-probe -D $(D)/usr/bin/dsp-probe
-	install -m 755 dsp-ping -D $(D)/usr/bin/dsp-ping
 	install -m 755 dsp-test -D $(D)/usr/bin/dsp-test
 
 dist: base := dsp-tools-$(version)

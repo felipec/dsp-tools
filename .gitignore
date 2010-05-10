@@ -1,5 +1,4 @@
 *.[od]
 dsp-load
 dsp-probe
-dsp-ping
 dsp-test
