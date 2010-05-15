@@ -101,14 +101,10 @@ configure_dsp_node(void *node,
 	dsp_msg_t msg;
 
 	msg.cmd = 0;
-	if (!do_fault) {
-		msg.arg_1 = (uint32_t) input_buffer->map;
-		msg.arg_2 = (uint32_t) output_buffer->map;
-	}
-	else {
-		msg.arg_1 = 0x12345678;
+	msg.arg_1 = (uint32_t) input_buffer->map;
+	msg.arg_2 = (uint32_t) output_buffer->map;
+	if (do_fault)
 		msg.arg_2 = 0x12345678;
-	}
 	dsp_node_put_message(dsp_handle, node, &msg, -1);
 }
 
