@@ -288,6 +288,16 @@ handle_options(int *argc,
 			(*argc)--;
 		}
 
+		if (!strcmp(cmd, "-s") || !strcmp(cmd, "--size")) {
+			if (*argc < 2) {
+				pr_err("bad option");
+				exit(-1);
+			}
+			input_buffer_size = output_buffer_size = atol((*argv)[1]);
+			(*argv)++;
+			(*argc)--;
+		}
+
 		if (!strcmp(cmd, "-f") || !strcmp(cmd, "--fault"))
 			do_fault = 1;
 
