@@ -188,7 +188,9 @@ void run_dmm(dsp_node_t *node,
 				((char *) input_buffer->data)[i] = foo;
 			foo++;
 		}
-		dmm_buffer_flush(input_buffer, input_buffer->size);
+
+		dmm_buffer_clean(input_buffer, input_buffer->size);
+		dmm_buffer_invalidate(output_buffer, output_buffer->size);
 		msg.cmd = 1;
 		msg.arg_1 = input_buffer->size;
 		dsp_node_put_message(dsp_handle, node, &msg, -1);
@@ -196,7 +198,6 @@ void run_dmm(dsp_node_t *node,
 			done = true;
 			break;
 		}
-		dmm_buffer_invalidate(output_buffer, output_buffer->size);
 
 		if (--times == 0)
 			break;
