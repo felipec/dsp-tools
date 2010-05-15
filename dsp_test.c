@@ -37,6 +37,7 @@ static bool done;
 static int ntimes;
 static bool do_fault;
 static bool do_ping;
+static bool do_write;
 
 static int dsp_handle;
 static void *proc;
@@ -180,15 +181,13 @@ void run_dmm(dsp_node_t *node,
 	while (!done) {
 		dsp_msg_t msg;
 
-#ifdef FILL_DATA
-		{
-			static unsigned char foo;
+		if (do_write) {
+			static unsigned char foo = 1;
 			unsigned int i;
 			for (i = 0; i < input_buffer->size; i++)
 				((char *) input_buffer->data)[i] = foo;
 			foo++;
 		}
-#endif
 		dmm_buffer_flush(input_buffer, input_buffer->size);
 		msg.cmd = 1;
 		msg.arg_1 = input_buffer->size;
@@ -293,6 +292,9 @@ handle_options(int *argc,
 
 		if (!strcmp(cmd, "-p") || !strcmp(cmd, "--ping"))
 			do_ping = 1;
+
+		if (!strcmp(cmd, "-w") || !strcmp(cmd, "--write"))
+			do_write = 1;
 
 		(*argv)++;
 		(*argc)--;
