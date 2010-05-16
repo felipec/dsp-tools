@@ -1,0 +1,12 @@
+= dsp-tools =
+
+Miscellaneous utilities for TI's C64x+ DSP.
+
+ * dsp-test: runs simple trivial tests
+ * dsp-load: prints the DSP CPU load and frequency
+ * dsp-probe: checks running tasks
+
+== building ==
+
+There are no dependencies, so just type 'make'. If you are using an old version
+of TI's dspbrdige driver, do 'make OLD=y'.
