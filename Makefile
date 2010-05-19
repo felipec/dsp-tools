@@ -6,7 +6,9 @@ CFLAGS := -O2 -Wall -Wextra -Wno-unused-parameter -std=c99
 override CFLAGS += -D_GNU_SOURCE
 
 ifndef OLD
-  override CFLAGS += -DNEW_API
+  override CFLAGS += -DDSP_API=1
+else
+  override CFLAGS += -DDSP_API=0
 endif
 
 ifdef DEBUG
