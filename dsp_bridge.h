@@ -210,6 +210,9 @@ bool dsp_attach(int handle,
 bool dsp_detach(int handle,
 		void *proc_handle);
 
+bool dsp_start(int handle,
+	       void *proc_handle);
+
 bool dsp_stop(int handle,
 	      void *proc_handle);
 
