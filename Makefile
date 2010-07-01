@@ -26,6 +26,9 @@ bins += dsp-probe
 dsp-test: dsp_test.o dsp_bridge.o log.o
 bins += dsp-test
 
+dsp-exec: dsp_exec.o dsp_bridge.o log.o
+bins += dsp-exec
+
 all: $(bins)
 
 D = $(DESTDIR)
@@ -50,6 +53,7 @@ install: $(bins)
 	install -m 755 dsp-load -D $(D)/usr/bin/dsp-load
 	install -m 755 dsp-probe -D $(D)/usr/bin/dsp-probe
 	install -m 755 dsp-test -D $(D)/usr/bin/dsp-test
+	install -m 755 dsp-exec -D $(D)/usr/bin/dsp-exec
 
 dist: base := dsp-tools-$(version)
 dist:
