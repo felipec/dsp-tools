@@ -96,8 +96,8 @@ destroy_node(dsp_node_t *node)
 
 static inline void
 configure_dsp_node(void *node,
-		   dmm_buffer_t *input_buffer,
-		   dmm_buffer_t *output_buffer)
+		dmm_buffer_t *input_buffer,
+		dmm_buffer_t *output_buffer)
 {
 	dsp_msg_t msg;
 
@@ -109,8 +109,7 @@ configure_dsp_node(void *node,
 	dsp_node_put_message(dsp_handle, node, &msg, -1);
 }
 
-static bool
-register_msgs(dsp_node_t *node)
+static bool register_msgs(dsp_node_t *node)
 {
 	events[0] = calloc(1, sizeof(struct dsp_notification));
 	if (!dsp_node_register_notify(dsp_handle, node,
@@ -133,9 +132,7 @@ register_msgs(dsp_node_t *node)
 	return true;
 }
 
-static bool
-check_events(dsp_node_t *node,
-	     dsp_msg_t *msg)
+static bool check_events(dsp_node_t *node, dsp_msg_t *msg)
 {
 	unsigned int index = 0;
 	pr_debug("waiting for events");
@@ -162,8 +159,7 @@ check_events(dsp_node_t *node,
 	}
 }
 
-void run_dmm(dsp_node_t *node,
-	     unsigned long times)
+static void run_dmm(dsp_node_t *node, unsigned long times)
 {
 	dmm_buffer_t *input_buffer;
 	dmm_buffer_t *output_buffer;
@@ -210,8 +206,7 @@ void run_dmm(dsp_node_t *node,
 	dmm_buffer_free(input_buffer);
 }
 
-void run_ping(dsp_node_t *node,
-	      unsigned long times)
+static void run_ping(dsp_node_t *node, unsigned long times)
 {
 	while (!done) {
 		dsp_msg_t msg;
@@ -234,9 +229,7 @@ void run_ping(dsp_node_t *node,
 	}
 }
 
-static bool
-run_task(dsp_node_t *node,
-	 unsigned long times)
+static bool run_task(dsp_node_t *node, unsigned long times)
 {
 	unsigned long exit_status;
 
@@ -264,9 +257,7 @@ run_task(dsp_node_t *node,
 	return true;
 }
 
-static void
-handle_options(int *argc,
-	       const char ***argv)
+static void handle_options(int *argc, const char ***argv)
 {
 	while (*argc > 0) {
 		const char *cmd = (*argv)[0];
@@ -312,9 +303,7 @@ handle_options(int *argc,
 	}
 }
 
-int
-main(int argc,
-     const char **argv)
+int main(int argc, const char **argv)
 {
 	dsp_node_t *node;
 	int ret = 0;

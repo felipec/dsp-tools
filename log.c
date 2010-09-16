@@ -60,11 +60,11 @@ log_level_to_string(unsigned int level)
 }
 
 void pr_helper(unsigned int level,
-	       const char *file,
-	       const char *function,
-	       unsigned int line,
-	       const char *fmt,
-	       ...)
+		const char *file,
+		const char *function,
+		unsigned int line,
+		const char *fmt,
+		...)
 {
 	char *tmp;
 	va_list args;
@@ -83,15 +83,15 @@ void pr_helper(unsigned int level,
 		syslog(log_level_to_syslog(level), "%s", tmp);
 #endif
 		fprintf(stderr, "%s: %s: %s\n",
-			log_level_to_string(level), function, tmp);
+				log_level_to_string(level), function, tmp);
 	}
 #ifdef DEBUG
 	else if (level == 2)
 		fprintf(stderr, "%s: %s: %s\n",
-			log_level_to_string(level), function, tmp);
+				log_level_to_string(level), function, tmp);
 	else if (level == 3)
 		fprintf(stderr, "%s: %s:%s(%u): %s\n",
-			log_level_to_string(level), file, function, line, tmp);
+				log_level_to_string(level), file, function, line, tmp);
 #endif
 
 	free(tmp);

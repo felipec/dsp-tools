@@ -28,11 +28,11 @@ extern int debug_level;
 #endif
 
 void pr_helper(unsigned int level,
-	       const char *file,
-	       const char *function,
-	       unsigned int line,
-	       const char *fmt,
-	       ...);
+		const char *file,
+		const char *function,
+		unsigned int line,
+		const char *fmt,
+		...);
 
 #define pr_base(level, ...) pr_helper(level, __FILE__, __func__, __LINE__, __VA_ARGS__)
 

@@ -29,8 +29,7 @@
 
 static unsigned delay = 500; /* in ms */
 
-static void
-display(void)
+static void display(void)
 {
 	int dsp_handle;
 	void *proc_handle;
@@ -45,8 +44,8 @@ display(void)
 		dsp_proc_get_info(dsp_handle, proc_handle, DSP_RESOURCE_PROCLOAD, &info, sizeof(info));
 
 		printf("load: %lu, freq: %lu\n",
-		       info.result.proc.pred_load,
-		       info.result.proc.pred_freq);
+				info.result.proc.pred_load,
+				info.result.proc.pred_freq);
 
 		usleep(delay * 1000);
 	} while (true);
@@ -56,9 +55,7 @@ leave:
 	dsp_close(dsp_handle);
 }
 
-int
-main(int argc,
-     char *argv[])
+int main(int argc, char *argv[])
 {
 	display();
 	return 0;

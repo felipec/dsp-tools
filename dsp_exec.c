@@ -26,9 +26,7 @@
 #include "dsp_bridge.h"
 #include "log.h"
 
-int
-main(int argc,
-     const char **argv)
+int main(int argc, const char **argv)
 {
 	int ret = 0;
 	int dsp_handle;

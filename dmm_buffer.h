@@ -51,7 +51,7 @@ typedef struct {
 
 static inline dmm_buffer_t *
 dmm_buffer_new(int handle,
-	       dsp_node_t *node)
+		dsp_node_t *node)
 {
 	dmm_buffer_t *b;
 	b = calloc(1, sizeof(*b));
@@ -99,7 +99,7 @@ dmm_buffer_unmap(dmm_buffer_t *b)
 
 static inline void
 dmm_buffer_clean(dmm_buffer_t *b,
-		 size_t len)
+		size_t len)
 {
 	pr_debug(NULL, "%p", b);
 	dsp_flush(b->handle, b->node, b->data, len, 1);
@@ -107,7 +107,7 @@ dmm_buffer_clean(dmm_buffer_t *b,
 
 static inline void
 dmm_buffer_invalidate(dmm_buffer_t *b,
-		      size_t len)
+		size_t len)
 {
 	pr_debug("%p", b);
 	dsp_invalidate(b->handle, b->node, b->data, len);
@@ -115,7 +115,7 @@ dmm_buffer_invalidate(dmm_buffer_t *b,
 
 static inline void
 dmm_buffer_flush(dmm_buffer_t *b,
-		 size_t len)
+		size_t len)
 {
 	pr_debug("%p", b);
 	dsp_flush(b->handle, b->node, b->data, len, 0);
@@ -123,7 +123,7 @@ dmm_buffer_flush(dmm_buffer_t *b,
 
 static inline void
 dmm_buffer_reserve(dmm_buffer_t *b,
-		   size_t size)
+		size_t size)
 {
 	size_t to_reserve;
 	size_t page_size;
@@ -141,7 +141,7 @@ leave:
 
 static inline void
 dmm_buffer_allocate(dmm_buffer_t *b,
-		    size_t size)
+		size_t size)
 {
 	pr_debug("%p", b);
 	dmm_buffer_unmap(b);
@@ -159,8 +159,8 @@ dmm_buffer_allocate(dmm_buffer_t *b,
 
 static inline void
 dmm_buffer_use(dmm_buffer_t *b,
-	       void *data,
-	       size_t size)
+		void *data,
+		size_t size)
 {
 	pr_debug("%p", b);
 	dmm_buffer_unmap(b);

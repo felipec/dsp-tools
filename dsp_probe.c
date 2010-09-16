@@ -109,7 +109,7 @@ static bool do_list(void)
 
 	tmp_table = calloc(num, sizeof(*tmp_table));
 	if (dsp_enum_nodes(dsp_handle, proc_handle, tmp_table, num,
-			   &node_count, &allocated_count))
+				&node_count, &allocated_count))
 	{
 		for (i = 0; i < node_count; i++) {
 			struct dsp_node_attr attr;
@@ -132,13 +132,13 @@ static bool do_list(void)
 		const char *state = node_status_to_str(node_table[i].state);
 		if (state)
 			printf("%s: %s (%s)\n",
-			       node_type_to_str(node_table[i].type),
-			       node_table[i].name,
-			       state);
+					node_type_to_str(node_table[i].type),
+					node_table[i].name,
+					state);
 		else
 			printf("%s: %s\n",
-			       node_type_to_str(node_table[i].type),
-			       node_table[i].name);
+					node_type_to_str(node_table[i].type),
+					node_table[i].name);
 	}
 
 	if (!dsp_detach(dsp_handle, proc_handle))
@@ -150,8 +150,7 @@ static bool do_list(void)
 	return true;
 }
 
-int main(int argc,
-	 char *argv[])
+int main(int argc, char *argv[])
 {
 	bool ok;
 
