@@ -2,6 +2,7 @@ CROSS_COMPILE ?= arm-linux-
 CC := $(CROSS_COMPILE)gcc
 
 CFLAGS := -O2 -Wall -Wextra -Wno-unused-parameter -std=c99
+LDFLAGS := -Wl,--as-needed
 
 override CFLAGS += -D_GNU_SOURCE
 
