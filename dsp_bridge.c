@@ -139,7 +139,7 @@
 #define STRM_ALLOCATEBUFFER	_IOWR(DB, DB_IOC(DB_STRM, 0), unsigned long)
 #define STRM_IDLE		_IOW(DB, DB_IOC(DB_STRM, 5), unsigned long)
 #define STRM_RECLAIM		_IOWR(DB, DB_IOC(DB_STRM, 8), unsigned long)
-#define STRM_FREEBUFFER	_IOWR(DB, DB_IOC(DB_STRM, 2), unsigned long)
+#define STRM_FREEBUFFER		_IOWR(DB, DB_IOC(DB_STRM, 2), unsigned long)
 #define STRM_ISSUE		_IOW(DB, DB_IOC(DB_STRM, 6), unsigned long)
 
 int dsp_open(void)
