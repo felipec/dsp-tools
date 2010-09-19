@@ -592,7 +592,7 @@ static inline bool allocate_segments(int handle,
 	if (!dsp_node_get_attr(handle, node, &attr, sizeof(attr)))
 		return false;
 
-	node_type = attr.info.props.uNodeType;
+	node_type = attr.info.props.ntype;
 
 	if ((node_type != DSP_NODE_DEVICE) && (cmm_info.segments > 0)) {
 		struct dsp_cmm_seg_info *seg;
@@ -690,10 +690,10 @@ bool dsp_node_allocate(int handle,
 			return false;
 		}
 
-		if (attrs->profile_id < props.uCountProfiles) {
+		if (attrs->profile_id < props.count_profiles) {
 			unsigned int heap_size = 0;
 
-			heap_size = props.aProfiles[attrs->profile_id].ulHeapSize;
+			heap_size = props.node_profiles[attrs->profile_id].heap_size;
 			if (heap_size) {
 				void *virtual = NULL;
 
