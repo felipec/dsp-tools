@@ -15,16 +15,23 @@
 #define DMM_BUFFER_H
 
 #include <stdlib.h> /* for calloc, free */
-#include <unistd.h> /* for getpagesize */
+#include <string.h> /* for memset */
 
 #include "dsp_bridge.h"
 #include "log.h"
 
 #define ROUND_UP(num, scale) (((num) + ((scale) - 1)) & ~((scale) - 1))
+#define PAGE_SIZE 0x1000
+
+enum dma_data_direction {
+	DMA_BIDIRECTIONAL,
+	DMA_TO_DEVICE,
+	DMA_FROM_DEVICE,
+};
 
 typedef struct {
 	int handle;
-	dsp_node_t *node;
+	void *proc;
 	void *data;
 	void *allocated_data;
 	size_t size;
@@ -36,19 +43,22 @@ typedef struct {
 	void *user_data;
 	bool used;
 	bool keyframe;
+	int dir;
 } dmm_buffer_t;
 
 static inline dmm_buffer_t *
 dmm_buffer_new(int handle,
-		dsp_node_t *node)
+		void *proc,
+		int dir)
 {
 	dmm_buffer_t *b;
 	b = calloc(1, sizeof(*b));
 
 	pr_debug("%p", b);
 	b->handle = handle;
-	b->node = node;
+	b->proc = proc;
 	b->alignment = 128;
+	b->dir = dir;
 
 	return b;
 }
@@ -60,72 +70,63 @@ dmm_buffer_free(dmm_buffer_t *b)
 	if (!b)
 		return;
 	if (b->map)
-		dsp_unmap(b->handle, b->node, b->map);
+		dsp_unmap(b->handle, b->proc, b->map);
 	if (b->reserve)
-		dsp_unreserve(b->handle, b->node, b->reserve);
+		dsp_unreserve(b->handle, b->proc, b->reserve);
 	free(b->allocated_data);
 	free(b);
 }
 
 static inline void
-dmm_buffer_map(dmm_buffer_t *b)
+dmm_buffer_begin(dmm_buffer_t *b,
+		size_t len)
 {
 	pr_debug("%p", b);
+	if (b->dir == DMA_FROM_DEVICE)
+		dsp_invalidate(b->handle, b->proc, b->data, len);
+	else
+		dsp_flush(b->handle, b->proc, b->data, len, 1);
+}
+
+static inline void
+dmm_buffer_end(dmm_buffer_t *b,
+		size_t len)
+{
+	pr_debug("%p", b);
+	if (b->dir != DMA_TO_DEVICE)
+		dsp_invalidate(b->handle, b->proc, b->data, len);
+}
+
+static inline void
+dmm_buffer_map(dmm_buffer_t *b)
+{
+	size_t to_reserve;
+	pr_debug("%p", b);
 	if (b->map)
-		dsp_unmap(b->handle, b->node, b->map);
-	dsp_map(b->handle, b->node, b->data, b->size, b->reserve, &b->map, 0);
+		dsp_unmap(b->handle, b->proc, b->map);
+	if (b->reserve)
+		dsp_unreserve(b->handle, b->proc, b->reserve);
+	/**
+	 * @todo What exactly do we want to do here? Shouldn't the driver
+	 * calculate this?
+	 */
+	to_reserve = ROUND_UP(b->size, PAGE_SIZE) + PAGE_SIZE;
+	dsp_reserve(b->handle, b->proc, to_reserve, &b->reserve);
+	dsp_map(b->handle, b->proc, b->data, b->size, b->reserve, &b->map, 0);
 }
 
 static inline void
 dmm_buffer_unmap(dmm_buffer_t *b)
 {
 	pr_debug("%p", b);
-	if (!b->map)
-		return;
-	dsp_unmap(b->handle, b->node, b->map);
-	b->map = NULL;
-}
-
-static inline void
-dmm_buffer_clean(dmm_buffer_t *b,
-		size_t len)
-{
-	pr_debug("%p", b);
-	dsp_flush(b->handle, b->node, b->data, len, 1);
-}
-
-static inline void
-dmm_buffer_invalidate(dmm_buffer_t *b,
-		size_t len)
-{
-	pr_debug("%p", b);
-	dsp_invalidate(b->handle, b->node, b->data, len);
-}
-
-static inline void
-dmm_buffer_flush(dmm_buffer_t *b,
-		size_t len)
-{
-	pr_debug("%p", b);
-	dsp_flush(b->handle, b->node, b->data, len, 0);
-}
-
-static inline void
-dmm_buffer_reserve(dmm_buffer_t *b,
-		size_t size)
-{
-	size_t to_reserve;
-	size_t page_size;
-	page_size = getpagesize();
-	if (b->reserve) {
-		if (ROUND_UP(size, page_size) <= ROUND_UP(b->size, page_size))
-			goto leave;
-		dsp_unreserve(b->handle, b->node, b->reserve);
+	if (b->map) {
+		dsp_unmap(b->handle, b->proc, b->map);
+		b->map = NULL;
 	}
-	to_reserve = ROUND_UP(size, page_size) + page_size;
-	dsp_reserve(b->handle, b->node, to_reserve, &b->reserve);
-leave:
-	b->size = size;
+	if (b->reserve) {
+		dsp_unreserve(b->handle, b->proc, b->reserve);
+		b->reserve = NULL;
+	}
 }
 
 static inline void
@@ -133,7 +134,6 @@ dmm_buffer_allocate(dmm_buffer_t *b,
 		size_t size)
 {
 	pr_debug("%p", b);
-	dmm_buffer_unmap(b);
 	free(b->allocated_data);
 	if (b->alignment != 0) {
 		if (posix_memalign(&b->allocated_data, b->alignment, ROUND_UP(size, b->alignment)) != 0)
@@ -142,8 +142,7 @@ dmm_buffer_allocate(dmm_buffer_t *b,
 	}
 	else
 		b->data = b->allocated_data = malloc(size);
-	dmm_buffer_reserve(b, size);
-	dmm_buffer_map(b);
+	b->size = size;
 }
 
 static inline void
@@ -152,10 +151,21 @@ dmm_buffer_use(dmm_buffer_t *b,
 		size_t size)
 {
 	pr_debug("%p", b);
-	dmm_buffer_unmap(b);
 	b->data = data;
-	dmm_buffer_reserve(b, size);
-	dmm_buffer_map(b);
+	b->size = size;
+}
+
+static inline dmm_buffer_t *
+dmm_buffer_calloc(int handle,
+		void *proc,
+		size_t size,
+		int dir)
+{
+	dmm_buffer_t *tmp;
+	tmp = dmm_buffer_new(handle, proc, dir);
+	dmm_buffer_allocate(tmp, size);
+	memset(tmp->data, 0, size);
+	return tmp;
 }
 
 #endif /* DMM_BUFFER_H */
