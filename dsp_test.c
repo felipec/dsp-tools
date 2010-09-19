@@ -265,7 +265,7 @@ static void handle_options(int *argc, const char ***argv)
 
 #ifdef DEBUG
 		if (!strcmp(cmd, "-d") || !strcmp(cmd, "--debug"))
-			debug_level = 3;
+			debug_level = 4;
 #endif
 
 		if (!strcmp(cmd, "-n") || !strcmp(cmd, "--ntimes")) {
@@ -311,7 +311,7 @@ int main(int argc, const char **argv)
 	signal(SIGINT, signal_handler);
 
 #ifdef DEBUG
-	debug_level = 2;
+	debug_level = 3;
 #endif
 	ntimes = 1000;
 

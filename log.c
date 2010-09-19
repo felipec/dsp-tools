@@ -22,7 +22,7 @@
 #endif
 
 #ifdef DEBUG
-unsigned debug_level = 1;
+unsigned debug_level = 2;
 #endif
 
 #ifdef SYSLOG
