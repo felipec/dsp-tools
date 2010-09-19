@@ -40,11 +40,11 @@ signal_handler(int signal)
 	done = true;
 }
 
-static inline dsp_node_t *
+static inline struct dsp_node *
 create_node(void)
 {
-	dsp_node_t *node;
-	const dsp_uuid_t test_uuid = { 0x3dac26d0, 0x6d4b, 0x11dd, 0xad, 0x8b,
+	struct dsp_node *node;
+	const struct dsp_uuid test_uuid = { 0x3dac26d0, 0x6d4b, 0x11dd, 0xad, 0x8b,
 		{ 0x08, 0x00, 0x20, 0x0c, 0x9a, 0x66 } };
 
 	if (!dsp_register(dsp_handle, &test_uuid, DSP_DCD_LIBRARYTYPE, "/lib/dsp/test.dll64P"))
@@ -69,7 +69,7 @@ create_node(void)
 }
 
 static inline bool
-destroy_node(dsp_node_t *node)
+destroy_node(struct dsp_node *node)
 {
 	if (node) {
 		if (!dsp_node_free(dsp_handle, node)) {
@@ -88,7 +88,7 @@ configure_dsp_node(void *node,
 		dmm_buffer_t *input_buffer,
 		dmm_buffer_t *output_buffer)
 {
-	dsp_msg_t msg;
+	struct dsp_msg msg;
 
 	msg.cmd = 0;
 	msg.arg_1 = (uint32_t) input_buffer->map;
@@ -98,7 +98,7 @@ configure_dsp_node(void *node,
 	dsp_node_put_message(dsp_handle, node, &msg, -1);
 }
 
-static bool register_msgs(dsp_node_t *node)
+static bool register_msgs(struct dsp_node *node)
 {
 	events[0] = calloc(1, sizeof(struct dsp_notification));
 	if (!dsp_node_register_notify(dsp_handle, node,
@@ -121,7 +121,7 @@ static bool register_msgs(dsp_node_t *node)
 	return true;
 }
 
-static bool check_events(dsp_node_t *node, dsp_msg_t *msg)
+static bool check_events(struct dsp_node *node, struct dsp_msg *msg)
 {
 	unsigned int index = 0;
 	pr_debug("waiting for events");
@@ -148,7 +148,7 @@ static bool check_events(dsp_node_t *node, dsp_msg_t *msg)
 	}
 }
 
-static void run_dmm(dsp_node_t *node, unsigned long times)
+static void run_dmm(struct dsp_node *node, unsigned long times)
 {
 	dmm_buffer_t *input_buffer;
 	dmm_buffer_t *output_buffer;
@@ -167,7 +167,7 @@ static void run_dmm(dsp_node_t *node, unsigned long times)
 	pr_info("running %lu times", times);
 
 	while (!done) {
-		dsp_msg_t msg;
+		struct dsp_msg msg;
 
 		if (do_write) {
 			static unsigned char foo = 1;
@@ -201,10 +201,10 @@ static void run_dmm(dsp_node_t *node, unsigned long times)
 	dmm_buffer_free(input_buffer);
 }
 
-static void run_ping(dsp_node_t *node, unsigned long times)
+static void run_ping(struct dsp_node *node, unsigned long times)
 {
 	while (!done) {
-		dsp_msg_t msg;
+		struct dsp_msg msg;
 
 		if (!dsp_send_message(dsp_handle, node, 2, 0, 0)) {
 			pr_err("dsp node put message failed");
@@ -224,7 +224,7 @@ static void run_ping(dsp_node_t *node, unsigned long times)
 	}
 }
 
-static bool run_task(dsp_node_t *node, unsigned long times)
+static bool run_task(struct dsp_node *node, unsigned long times)
 {
 	unsigned long exit_status;
 
@@ -300,7 +300,7 @@ static void handle_options(int *argc, const char ***argv)
 
 int main(int argc, const char **argv)
 {
-	dsp_node_t *node;
+	struct dsp_node *node;
 	int ret = 0;
 	unsigned i;
 

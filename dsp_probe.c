@@ -54,15 +54,15 @@ node_status_to_str(enum dsp_node_state state)
 }
 
 struct node_info {
-	dsp_uuid_t id;
+	struct dsp_uuid id;
 	enum dsp_node_type type;
 	char name[32];
 	enum dsp_node_state state;
 };
 
-static inline bool uuidcmp(dsp_uuid_t *u1, dsp_uuid_t *u2)
+static inline bool uuidcmp(struct dsp_uuid *u1, struct dsp_uuid *u2)
 {
-	if (memcmp(u1, u2, sizeof(dsp_uuid_t)) == 0)
+	if (memcmp(u1, u2, sizeof(struct dsp_uuid)) == 0)
 		return true;
 	return false;
 }
@@ -102,7 +102,7 @@ static bool do_list(void)
 	{
 		for (i = 0; i < node_count; i++) {
 			struct dsp_node_attr attr;
-			dsp_node_t node = { .handle = tmp_table[i] };
+			struct dsp_node node = { .handle = tmp_table[i] };
 			if (dsp_node_get_attr(dsp_handle, &node, &attr, sizeof(attr))) {
 				unsigned j;
 				for (j = 0; j < num; j++) {
