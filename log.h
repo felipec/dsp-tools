@@ -13,7 +13,7 @@
 #define LOG_H
 
 #ifdef DEBUG
-extern int debug_level;
+extern unsigned debug_level;
 #endif
 
 void pr_helper(unsigned int level,
