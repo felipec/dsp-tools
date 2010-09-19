@@ -102,20 +102,20 @@ static bool register_msgs(dsp_node_t *node)
 {
 	events[0] = calloc(1, sizeof(struct dsp_notification));
 	if (!dsp_node_register_notify(dsp_handle, node,
-				      DSP_NODEMESSAGEREADY, 1,
-				      events[0]))
+				DSP_NODEMESSAGEREADY, 1,
+				events[0]))
 		return false;
 
 	events[1] = calloc(1, sizeof(struct dsp_notification));
 	if (!dsp_register_notify(dsp_handle, proc,
-				 DSP_MMUFAULT, 1,
-				 events[1]))
+				DSP_MMUFAULT, 1,
+				events[1]))
 		return false;
 
 	events[2] = calloc(1, sizeof(struct dsp_notification));
 	if (!dsp_register_notify(dsp_handle, proc,
-				 DSP_SYSERROR, 1,
-				 events[2]))
+				DSP_SYSERROR, 1,
+				events[2]))
 		return false;
 
 	return true;
@@ -134,7 +134,7 @@ static bool check_events(dsp_node_t *node, dsp_msg_t *msg)
 	case 0:
 		dsp_node_get_message(dsp_handle, node, msg, 100);
 		pr_debug("got dsp message: 0x%0x 0x%0x 0x%0x",
-			 msg->cmd, msg->arg_1, msg->arg_2);
+				msg->cmd, msg->arg_1, msg->arg_2);
 		return true;
 	case 1:
 		pr_err("got DSP MMUFAULT");
@@ -217,7 +217,7 @@ static void run_ping(dsp_node_t *node, unsigned long times)
 		}
 
 		printf("ping: id=%d, msg=%d, mem=%d\n",
-		       msg.cmd, msg.arg_1, msg.arg_2);
+				msg.cmd, msg.arg_1, msg.arg_2);
 
 		if (--times == 0)
 			break;
