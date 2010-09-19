@@ -152,6 +152,7 @@ static void run_dmm(struct dsp_node *node, unsigned long times)
 {
 	dmm_buffer_t *input_buffer;
 	dmm_buffer_t *output_buffer;
+	unsigned long total_times;
 
 	input_buffer = dmm_buffer_new(dsp_handle, proc, DMA_TO_DEVICE);
 	output_buffer = dmm_buffer_new(dsp_handle, proc, DMA_FROM_DEVICE);
@@ -164,6 +165,7 @@ static void run_dmm(struct dsp_node *node, unsigned long times)
 
 	configure_dsp_node(node, input_buffer, output_buffer);
 
+	total_times = times;
 	pr_info("running %lu times", times);
 
 	while (!done) {
@@ -199,6 +201,8 @@ static void run_dmm(struct dsp_node *node, unsigned long times)
 
 	dmm_buffer_free(output_buffer);
 	dmm_buffer_free(input_buffer);
+
+	printf("copied %lu times successfully\n", total_times);
 }
 
 static void run_ping(struct dsp_node *node, unsigned long times)
