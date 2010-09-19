@@ -89,9 +89,9 @@ static bool do_list(void)
 	node_table = calloc(num, sizeof(*node_table));
 	for (i = 0; i < num; i++) {
 		if (dsp_enum(dsp_handle, i, &props, sizeof(props), &num)) {
-			memcpy(&node_table[i].id, &props.uiNodeID, sizeof(props.uiNodeID));
-			memcpy(&node_table[i].name, props.acName, sizeof(props.acName));
-			node_table[i].type = props.uNodeType;
+			memcpy(&node_table[i].id, &props.node_id, sizeof(props.node_id));
+			memcpy(&node_table[i].name, props.ac_name, sizeof(props.ac_name));
+			node_table[i].type = props.ntype;
 			node_table[i].state = -1;
 		}
 	}
@@ -106,7 +106,7 @@ static bool do_list(void)
 			if (dsp_node_get_attr(dsp_handle, &node, &attr, sizeof(attr))) {
 				unsigned j;
 				for (j = 0; j < num; j++) {
-					if (uuidcmp(&node_table[j].id, &attr.info.props.uiNodeID)) {
+					if (uuidcmp(&node_table[j].id, &attr.info.props.node_id)) {
 						node_table[j].state = attr.info.state;
 						break;
 					}
