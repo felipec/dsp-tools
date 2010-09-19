@@ -5,8 +5,17 @@ Miscellaneous utilities for TI's C64x+ DSP.
  * dsp-test: runs simple trivial tests
  * dsp-load: prints the DSP CPU load and frequency
  * dsp-probe: checks running tasks
+ * dsp-exec: loads base images into the DSP
 
 == building ==
 
 There are no dependencies, so just type 'make'. If you are using an old version
-of TI's dspbrdige driver, do 'make OLD=y'.
+of TI's dspbrdige driver, do 'make DSP_API=0'.
+
+== tidsp ==
+
+You'll need a kernel with tidspbridge driver, the DSP firmware in /lib/dsp, and
+the DSP running a proper baseimage (baseimage.dof).
+
+See:
+http://omapzoom.org/wiki/L23.i3.8_Release_Notes
