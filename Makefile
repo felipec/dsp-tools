@@ -6,7 +6,7 @@ LDFLAGS := -Wl,--as-needed
 
 override CFLAGS += -D_GNU_SOURCE
 
-DSP_API := 1
+DSP_API := 2
 
 override CFLAGS += -DDSP_API=$(DSP_API)
 
