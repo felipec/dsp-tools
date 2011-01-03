@@ -283,7 +283,7 @@ static void handle_options(int *argc, const char ***argv)
 				pr_err("bad option");
 				exit(-1);
 			}
-			input_buffer_size = output_buffer_size = atol((*argv)[1]);
+			input_buffer_size = output_buffer_size = strtol((*argv)[1], NULL, 16);
 			(*argv)++;
 			(*argc)--;
 		}
