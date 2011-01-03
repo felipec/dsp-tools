@@ -27,6 +27,8 @@ static int ntimes;
 static bool do_fault;
 static bool do_ping;
 static bool do_write;
+static bool do_corruption;
+static unsigned long corruption_point;
 
 static int dsp_handle;
 static void *proc;
@@ -95,6 +97,8 @@ configure_dsp_node(void *node,
 	msg.arg_2 = (uint32_t) output_buffer->map;
 	if (do_fault)
 		msg.arg_2 = 0x12345678;
+	if (do_corruption)
+		msg.arg_2 = corruption_point;
 	dsp_node_put_message(dsp_handle, node, &msg, -1);
 }
 
@@ -159,6 +163,12 @@ static void run_dmm(struct dsp_node *node, unsigned long times)
 
 	dmm_buffer_allocate(input_buffer, input_buffer_size);
 	dmm_buffer_allocate(output_buffer, output_buffer_size);
+
+	if (do_corruption) {
+		char *ptr = input_buffer->data;
+		for (unsigned i = 0; i < input_buffer->size; i++)
+			ptr[i] = 0x6b;
+	}
 
 	dmm_buffer_map(output_buffer);
 	dmm_buffer_map(input_buffer);
@@ -284,6 +294,17 @@ static void handle_options(int *argc, const char ***argv)
 				exit(-1);
 			}
 			input_buffer_size = output_buffer_size = strtol((*argv)[1], NULL, 16);
+			(*argv)++;
+			(*argc)--;
+		}
+
+		if (!strcmp(cmd, "-c") || !strcmp(cmd, "--corrupt")) {
+			if (*argc < 2) {
+				pr_err("bad option");
+				exit(-1);
+			}
+			do_corruption = 1;
+			corruption_point = strtoll((*argv)[1], NULL, 16);
 			(*argv)++;
 			(*argc)--;
 		}
